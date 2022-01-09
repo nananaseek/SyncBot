@@ -2,9 +2,13 @@
 
 - `yarn install` (before install yarn: `npm install -g yarn`)
 
-# then run development
+# front development
 
 - `yarn dev`
+
+# front production
+
+- `yarn build`
 
 # To run backend
 
