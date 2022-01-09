@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,9 +42,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "user_auth",
     "fileManager",
+    "frontend",
 ]
 
-AUTH_USER_MODEL = 'user_auth.User'
+AUTH_USER_MODEL = "user_auth.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -79,16 +81,9 @@ WSGI_APPLICATION = "Cloud.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "Cloud",
-        "USER": "postgres",
-        "PASSWORD": "1234",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
-}
+DB_CONFIG_FILE = "db_config.json"
+
+DATABASES = json.load(open(os.path.join(BASE_DIR, DB_CONFIG_FILE)))
 
 
 # Password validation
@@ -125,9 +120,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR,'static/')
-STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_URL = "/static/"
 
 
 # Default primary key field type
@@ -137,14 +131,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'user_auth.backends.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "user_auth.backends.JWTAuthentication",
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
     ],
-
 }
