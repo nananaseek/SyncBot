@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "user_auth",
     "fileManager",
+    "frontend",
 ]
 
 AUTH_USER_MODEL = 'user_auth.User'
@@ -82,11 +83,11 @@ WSGI_APPLICATION = "Cloud.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "Cloud",
-        "USER": "postgres",
-        "PASSWORD": "1234",
+        "NAME": "syncbot",
+        "USER": "admin",
+        "PASSWORD": "admin",
         "HOST": "localhost",
-        "PORT": "5432",
+        "PORT": "5433",
     }
 }
 
