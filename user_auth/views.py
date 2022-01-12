@@ -2,11 +2,14 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, \
-    RetrieveAPIView
+    RetrieveAPIView, GenericAPIView
+from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 from .permissions import *
 from .serializers import *
@@ -42,6 +45,16 @@ class LoginDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     permission_classes = (IsAdminUser,)
     serializer_class = LoginSerializer
+
+class LogoutAPIView(GenericAPIView) :
+    serializer_class = LogoutSerializer
+    pernission_classes = permissions.IsAuthenticated,
+
+    def post(self, request):
+        token = RefreshToken(request.data.get('refresh'))
+        token.blacklist()
+        return Response("Success")
+        
 
 
 class UserViewSet(ModelViewSet):
@@ -81,7 +94,6 @@ class UserViewSet(ModelViewSet):
 
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
-    # renderer_classes = (UserJSONRenderer,)
     serializer_class = UserSerializer
 
     def retrieve(self, request, *args, **kwargs):
