@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 
 from .models import *
@@ -21,7 +23,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(TokenObtainPairSerializer):
     email = serializers.CharField(max_length=255, read_only=True)
     username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)
@@ -31,9 +33,12 @@ class LoginSerializer(serializers.Serializer):
         username = data.get('username', None)
         password = data.get('password', None)
 
+        atr = super(LoginSerializer, self).validate(data)
+        atr.update({'user': self.user.username})
+        atr.update({'id': self.user.id})
         if username is None:
             raise serializers.ValidationError(
-                'An email address is required to log in.'
+                'An username is required to log in.'
             )
 
         if password is None:
@@ -45,7 +50,7 @@ class LoginSerializer(serializers.Serializer):
 
         if user is None:
             raise serializers.ValidationError(
-                'A user with this email and password was not found.'
+                'A user with this user and password was not found.'
             )
 
         if not user.is_active:
@@ -57,8 +62,19 @@ class LoginSerializer(serializers.Serializer):
             'id': user.id,
             'email': user.email,
             'username': user.username,
-            'token': user.token
+            # 'token': user.token,
+            'token': atr
         }
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate (self, attrs):
+        self. token = attrs ['refresh']
+        return attrs
+
+    def save(self, **kwargs):
+        RefreshToken (self. token).blacklist
 
 
 class UserSerializer(serializers.ModelSerializer):

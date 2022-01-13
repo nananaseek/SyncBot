@@ -57,7 +57,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):
-        return self.email
+        return self.username
 
     def has_perm(self, perm, obj=None):
         return True
@@ -69,16 +69,19 @@ class User(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
-    @property
-    def token(self):
-        return self._generate_jwt_token()
+    # @property
+    # def token(self):
+    #     return self._generate_jwt_token()
 
-    def _generate_jwt_token(self):
-        dt = datetime.now() + timedelta(days=1)
+    # def get_full_name(self):
+    #     return self.username
 
-        token = jwt.encode({
-            'id': self.pk,
-            'exp': dt.utcfromtimestamp(dt.timestamp())
-        }, settings.SECRET_KEY, algorithm='HS256')
+    # def _generate_jwt_token(self):
+    #     dt = datetime.now() + timedelta(days=1)
 
-        return token
+    #     token = jwt.encode({
+    #         'id': self.pk,
+    #         'exp': dt.utcfromtimestamp(dt.timestamp())
+    #     }, settings.SECRET_KEY, algorithm='HS256')
+
+    #     return token
