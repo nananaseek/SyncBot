@@ -87,9 +87,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'username', 'password', 'token',)
+        fields = ('id', 'email', 'username', 'password')
 
-        read_only_fields = ('token',)
+        # read_only_fields = ('token',)
 
     def update(self, instance, validated_data):
         """ Выполняет обновление User. """
