@@ -9,6 +9,11 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
+
+class TGUsers(models.Model):
+    id_user = models.IntegerField()
+    token = models.CharField(max_length=600)
+
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
         """
@@ -73,8 +78,8 @@ class User(AbstractBaseUser):
     # def token(self):
     #     return self._generate_jwt_token()
 
-    # def get_full_name(self):
-    #     return self.username
+    def get_full_name(self):
+        return self.username
 
     # def _generate_jwt_token(self):
     #     dt = datetime.now() + timedelta(days=1)
