@@ -13,15 +13,30 @@ class RegistrationSerializer(serializers.ModelSerializer):
         write_only=True
     )
 
-    token = serializers.CharField(max_length=255, read_only=True)
+    token = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ['id', 'email', 'username', 'password', 'token']
+ 
+    def get_token(self, user):
+        tokens = RefreshToken.for_user(user)
+        refresh = str(tokens)
+        access = str(tokens.access_token)
+        data = {
+            "refresh": refresh,
+            "access": access
+        }
+        return data
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
-
+        user = User(
+            username=validated_data['username'],
+            email=validated_data['email']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 class LoginSerializer(TokenObtainPairSerializer):
     email = serializers.CharField(max_length=255, read_only=True)
@@ -33,8 +48,13 @@ class LoginSerializer(TokenObtainPairSerializer):
         username = data.get('username', None)
         password = data.get('password', None)
 
-        atr = super(LoginSerializer, self).validate(data)
+        data = super(LoginSerializer, self).validate(data)
         # atr.update({'user': self.user.username})
+        refresh = self.get_token(self.user)
+
+        data["refresh"] = str(refresh)
+        data["access"] = str(refresh.access_token)
+
         if username is None:
             raise serializers.ValidationError(
                 'An username is required to log in.'
@@ -62,7 +82,7 @@ class LoginSerializer(TokenObtainPairSerializer):
             'email': user.email,
             'username': user.username,
             # 'token': user.token,
-            'token': atr
+            'token': data
         }
 
 class LogoutSerializer(serializers.Serializer):
