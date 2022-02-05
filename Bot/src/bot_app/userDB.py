@@ -1,10 +1,11 @@
 import asyncio
 import contextlib
 import typing
+from datetime import datetime
 from sqlalchemy import MetaData, Boolean, Column, \
                         Date, DateTime, Enum, Float, ForeignKey, Integer, \
-                        CHAR,String, Table, UniqueConstraint, create_engine, and_, func
-from sqlalchemy.orm import sessionmaker, relationship, mapper
+                        CHAR, String, Table, UniqueConstraint, create_engine, and_, select
+from sqlalchemy.orm import sessionmaker, relationship, mapper, load_only
 from sqlalchemy_utils import database_exists, create_database
 from .conf import postgresql as settings
 
@@ -13,7 +14,7 @@ def get_engine (user, passwd, host, port, db) :
     url = f"postgresql://{user}:{passwd}@{host}:{port}/{db}"
     if not database_exists (url) :
         create_database (url)
-    engine = create_engine (url, pool_size=50, echo=True)
+    engine = create_engine (url, pool_size=50, echo=False)
     return engine
 
 def get_engine_from_settings ():
@@ -34,28 +35,28 @@ def get_engine_from_settings ():
 #     return session
 
 engine = get_engine_from_settings()
-meta = MetaData(engine)
+meta = MetaData()
 conn = engine.connect()
 
-users = Table('user_auth_tgusers', meta, autoload=True)
+users_table = Table('Users', meta,
+    Column('id_user', Integer),
+    Column('token',String(512)),
+    Column('created_on', DateTime(), default=datetime.now)
+)
 
-class User():
-    def __init__(self, id_user, token):
-        self.id_user = id_user
-        self.token = token
+meta.create_all(engine)
 
+def create_token(userID, token):
+    create_token = users_table.insert().values(id_user=userID, token=token)
+    conn.execute(create_token)
 
-def add_user_in_db (userID, refToken):
-    mapper(User, users)
-    justASs = User('id_user', userID, 'token', refToken)
-    DBsession = sessionmaker(bind=engine)
-    session = DBsession()
-    session.add(justASs)
-    session.commit()
+""" 
+TODO: доделать закрытие сессии
+"""
 
-def get_token(userID):
-    token = users.select().where(users.c.id_user == userID)
-    result = conn.execute(token)
-    return result.fetchone()
+def get_reftoken_user(user_id):
 
-print(get_token(382963259))
+    reftoken = users_table.select().where(users_table.c.id_user == user_id)
+    result = conn.execute(reftoken)
+
+    return result.fetchone()[1]

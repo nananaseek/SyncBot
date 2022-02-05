@@ -1,4 +1,3 @@
-from itertools import count
 import logging
 import json
 import ast
@@ -10,7 +9,6 @@ from aiogram.dispatcher.filters import Text
 from aiogram.types import ParseMode
 from aiogram.utils.exceptions import MessageNotModified
 from aiogram.utils.callback_data import CallbackData
-
 
 
 from .app import *
@@ -90,7 +88,7 @@ async def invalid_login_check (query: types.CallbackQuery, state: FSMContext):
         userid = query.from_user.id
         json_data = json_data['token']
         json_data = ast.literal_eval(json_data)
-        add_user_in_db(userID=userid, refToken=json_data['refresh'])
+        create_token(userID=userid, token=json_data['refresh'])
         
 
     
