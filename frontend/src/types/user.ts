@@ -1,6 +1,4 @@
-export interface ICurrentUser {
-  id: number;
-  name: string;
-  surname: string;
+export default interface IUser {
+  username: string;
   email: string;
 }

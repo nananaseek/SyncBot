@@ -8,9 +8,9 @@ import RegistrationPage from "./pages/Registration";
 function App() {
   return (
     <Switch>
-      <Route path="/" exact component={HomePage} />
-      <Route path="/login" component={LoginPage} />
-      <Route path="/registration" component={RegistrationPage} />
+      <Route path="/files" exact component={HomePage} />
+      <Route path="/files/login" component={LoginPage} />
+      <Route path="/files/registration" component={RegistrationPage} />
     </Switch>
   );
 }
