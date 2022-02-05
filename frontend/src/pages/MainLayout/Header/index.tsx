@@ -1,18 +1,16 @@
 import * as React from "react";
 import { Layout } from "antd";
 import { UserInfo } from "./UserInfo";
-import { ICurrentUser } from "types/user";
+import IUser from "types/user";
+import { useStore } from "effector-react";
+import { $user } from "../../../models/auth";
 
 export const Header = () => {
-  const user: ICurrentUser = {
-    id: 1,
-    name: "Іван",
-    surname: "Дерда",
-    email: "ivanderda1999@gmail.com",
-  };
+  const currentUser = useStore($user);
+
   return (
     <Layout.Header className="site-header">
-      <UserInfo currentUser={user} />
+      <UserInfo currentUser={currentUser} />
     </Layout.Header>
   );
 };

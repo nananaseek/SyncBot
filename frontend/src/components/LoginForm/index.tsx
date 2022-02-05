@@ -3,13 +3,20 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import * as React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { submitFrom } from "./model";
+import { useStore } from "effector-react";
+import { $isAuth } from "../../models/auth";
 
 export const LoginForm = () => {
   const history = useHistory();
+  const authSuccess = useStore($isAuth);
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
-    history.push({ pathname: "/" });
+    submitFrom(values);
+    if (authSuccess) {
+      history.push({ pathname: "/files" });
+    }
   };
 
   return (

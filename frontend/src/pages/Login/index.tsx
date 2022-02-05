@@ -1,5 +1,5 @@
 import * as React from "react";
-import { LoginForm } from "./LoginForm";
+import { LoginForm } from "../../components/LoginForm";
 import "./index.less";
 
 const LoginPage = () => {
