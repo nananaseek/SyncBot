@@ -1,0 +1,42 @@
+.layout {
+  .content-layout {
+    min-height: calc(100vh - 140px);
+    &--main {
+      margin: 30px;
+      padding: 20px;
+      background-color: #fff;
+    }
+  }
+  .site-header {
+    padding: 0;
+    background-color: #fff;
+  }
+
+  footer {
+    text-align: center;
+  }
+
+  .current-user {
+    text-align: right;
+    margin-right: 20px;
+    & > span {
+      margin-right: 10px;
+    }
+    & .avatar {
+      cursor: pointer;
+    }
+  }
+}
+
+.user-menu {
+  &--info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 5px 12px;
+
+    &--email {
+      color: gray;
+    }
+  }
+}
