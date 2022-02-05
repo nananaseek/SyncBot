@@ -17,7 +17,7 @@ from .models import *
 
 
 
-class RegistrationAPIView(APIView):
+class RegistrationAPIView(GenericAPIView):
 
     permission_classes = (AllowAny,)
     serializer_class = RegistrationSerializer
@@ -30,7 +30,7 @@ class RegistrationAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class LoginAPIView(APIView):
+class LoginAPIView(GenericAPIView):
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
 
@@ -46,6 +46,7 @@ class LoginDetailAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAdminUser,)
     serializer_class = LoginSerializer
 
+
 class LogoutAPIView(GenericAPIView) :
     serializer_class = LogoutSerializer
     pernission_classes = permissions.IsAuthenticated,
@@ -55,7 +56,6 @@ class LogoutAPIView(GenericAPIView) :
         token.blacklist()
         return Response("Success")
         
-
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
@@ -80,16 +80,6 @@ class UserViewSet(ModelViewSet):
         obj = get_object_or_404(User.objects.filter(id=self.kwargs["pk"]))
         self.check_object_permissions(self.request, obj)
         return obj
-
-
-# class Logout(APIView):
-#     permission_classes = (IsAuthenticated, )
-#     authentication_classes = (JSONWebTokenAuthentication, )
-
-#     def post(self, request):
-#         # simply delete the token to force a login        
-#         request.auth.delete()  # This will not work
-#         return Response(status=status.HTTP_200_OK)
 
 
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):

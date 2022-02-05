@@ -34,8 +34,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         password = data.get('password', None)
 
         atr = super(LoginSerializer, self).validate(data)
-        atr.update({'user': self.user.username})
-        atr.update({'id': self.user.id})
+        # atr.update({'user': self.user.username})
         if username is None:
             raise serializers.ValidationError(
                 'An username is required to log in.'
@@ -88,8 +87,6 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'username', 'password')
-
-        # read_only_fields = ('token',)
 
     def update(self, instance, validated_data):
         """ Выполняет обновление User. """

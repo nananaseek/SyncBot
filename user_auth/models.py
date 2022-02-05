@@ -10,10 +10,6 @@ from django.contrib.auth.models import (
 )
 
 
-class TGUsers(models.Model):
-    id_user = models.IntegerField()
-    token = models.CharField(max_length=600)
-
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
         """
