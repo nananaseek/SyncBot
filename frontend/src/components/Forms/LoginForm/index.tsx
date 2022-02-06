@@ -1,23 +1,28 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import * as React from "react";
 import { Link, useHistory } from "react-router-dom";
-import { submitFrom } from "./model";
+import { submitLoginFrom } from "../model";
 import { useStore } from "effector-react";
-import { $isAuth } from "../../models/auth";
+import { $isAuth, fxLogin } from "../../../models/auth";
+import { useEffect } from "react";
+import { HOME } from "../../../api/urls";
 
 export const LoginForm = () => {
   const history = useHistory();
   const authSuccess = useStore($isAuth);
+  const loading = useStore(fxLogin.pending);
 
   const onFinish = (values: any) => {
-    console.log("Success:", values);
-    submitFrom(values);
-    if (authSuccess) {
-      history.push({ pathname: "/files" });
-    }
+    submitLoginFrom(values);
   };
+
+  useEffect(() => {
+    if (authSuccess) {
+      history.push({ pathname: HOME });
+    }
+  }, [authSuccess]);
 
   return (
     <div className="login-page-container">
@@ -61,6 +66,7 @@ export const LoginForm = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
+            loading={loading}
           >
             Log in
           </Button>

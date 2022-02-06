@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./index.less";
-import { RegistrationForm } from "./RegistrationForm";
+import { RegistrationForm } from "../../components/Forms/RegistrationForm";
 
 const RegistrationPage = () => {
   return (

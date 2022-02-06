@@ -18,8 +18,6 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 };
 
 const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
-  console.log(error);
-
   if (error.response) {
     // Access Token was expired
     if (
