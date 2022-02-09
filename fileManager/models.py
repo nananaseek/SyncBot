@@ -4,7 +4,7 @@ from user_auth.models import User
 
 
 def content_file_name(instance, filename):
-    return 'content/ {0}/{1}'.format(instance.owner, filename)
+    return 'content/{0}/{1}'.format(instance.owner, filename)
 
 class File(models.Model):
     name = models.CharField(max_length=120, blank=True)

@@ -81,7 +81,6 @@ class LoginSerializer(TokenObtainPairSerializer):
             'id': user.id,
             'email': user.email,
             'username': user.username,
-            # 'token': user.token,
             'token': data
         }
 
