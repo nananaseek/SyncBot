@@ -41,10 +41,11 @@ class FileDownloadListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, pk,  format=None):
         queryset = File.objects.get(id=pk)
-        file_handle = queryset.file.path
-        document = open(file_handle, 'rb')
-        response = HttpResponse(FileWrapper(document), content_type='application/msword')
-        response['Content-Disposition'] = 'attachment; filename="%s"' % queryset.file.name
+        file_handle = queryset.filename.path
+        file = open(file_handle, 'rb')
+        filename = queryset.filename.name.split('/')[-1]
+        response = HttpResponse(FileWrapper(file))
+        response['Content-Disposition'] = 'attachment; filename="%s"' % filename
         return response
 
 class FileUploadView(ModelViewSet):

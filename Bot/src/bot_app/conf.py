@@ -28,6 +28,7 @@ postgresql = {'pguser' : 'postgres',
 Посилання на API сервиса
 """
 API_LOGIN = "http://127.0.0.1:8000/api/login/"
-API_FILE_LIST = "http://127.0.0.1:8000/file/"
+API_FILE_LIST = "http://127.0.0.1:8000/api/file/"
 API_REFRESH_TOKEN = "http://127.0.0.1:8000/api/token/refresh/"
-
+API_DOWNLOAD_FILE = "http://127.0.0.1:8000/api/file/download/"
+API_UPLOAD_FILE = ""
