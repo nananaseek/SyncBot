@@ -8,25 +8,16 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ParseMode
 from aiogram.utils.exceptions import MessageNotModified
-from aiogram.utils.callback_data import CallbackData
-
 
 from .app import *
 from .states import *
 from .data_fetcher import *
 from .userDB import *
+from .keyboards import *
+from .utilits import *
 from . import messages
 
 
-vote_cb = CallbackData('login', 'action')  # post:<action>:<amount>
-
-
-def get_keyboard(amount):
-    return types.InlineKeyboardMarkup().row(
-        types.InlineKeyboardButton('Увійти', callback_data=vote_cb.new(action='login')),
-        types.InlineKeyboardButton('Скасувати', callback_data=vote_cb.new(action='cancel')),
-    )
- 
 @dp.message_handler(commands=['login'])
 async def login_in_t (message: types.Message):
     await login.username.set()
@@ -48,30 +39,24 @@ async def process_paswd(message: types.Message, state: FSMContext):
         data['password'] = message.text
 
     await login.next()
-    await message.reply('Войти в систему?', reply_markup=get_keyboard(0))
+    await message.reply('Войти в систему?', reply_markup=get_keyboard_login(0))
+
+@dp.callback_query_handler(vote_cb.filter(action='cancel'),state=login.fin)
+async def vote_up_cb_handler( query: types.CallbackQuery, state: FSMContext):
+
+    current_state = await state.get_state()
+    await msg_del(query, 5)
+    logging.info('Cancelling state %r', current_state)
+    await state.finish()
 
 @dp.callback_query_handler(vote_cb.filter(action='login'),state=login.fin)
 async def vote_up_cb_handler(query: types.CallbackQuery, state: FSMContext):
 
     await invalid_login_check(query=query, state=state)    
 
-    await msg_del(query)
+    await msg_del(query, 5)
     await state.finish()
-
-@dp.callback_query_handler(vote_cb.filter(action='cancel'),state=login.fin)
-async def vote_up_cb_handler( query: types.CallbackQuery, state: FSMContext):
-
-    current_state = await state.get_state()
-    await msg_del(query)
-    logging.info('Cancelling state %r', current_state)
-    await state.finish()
-
-async def msg_del(query):
-    count = 0
-    while count <= 5 :
-        msg = query.message.message_id - count
-        await bot.delete_message(query.from_user.id, msg)
-        count = count + 1   
+  
 
 async def login_api (state):
     json_data = json.dumps(await state.get_data(), indent = 4) 
