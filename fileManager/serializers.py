@@ -10,3 +10,11 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ('id', 'name', 'data_create', 'filename')
+
+class FireBaseSerializer(serializers.ModelSerializer):
+    
+    filename = serializers.FileField(max_length=120)
+
+    class Meta:
+        model = File
+        fields = ('id', 'name', 'data_create', 'filename')

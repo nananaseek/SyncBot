@@ -60,3 +60,15 @@ class FileUploadView(ModelViewSet):
     def get_queryset(self):
         author_queryset = self.queryset.filter(owner=self.request.user)
         return author_queryset
+
+class FileFireBaseUploadView(ModelViewSet):
+    queryset = Filefirebase.objects.all()
+    serializer_class = FireBaseSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        author_queryset = self.queryset.filter(owner=self.request.user)
+        return author_queryset

@@ -15,6 +15,13 @@ class File(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='uploaded_files', on_delete=models.CASCADE)    
     filename = models.FileField(upload_to=content_file_name)
 
+class Filefirebase(models.Model):
+    name = models.CharField(max_length=120, blank=True)
+    completed = models.BooleanField(default=False)
+    data_create = models.DateTimeField(auto_now=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='uploaded_files_firebase', on_delete=models.CASCADE,  null=True)    
+    filename = models.CharField(max_length=256, blank=True)
+
 @receiver(models.signals.post_delete, sender=File)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
 
