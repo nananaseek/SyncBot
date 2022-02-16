@@ -24,6 +24,7 @@
     "babel-loader": "^8.2.3",
     "effector": "^21.8.10",
     "effector-react": "^21.3.1",
+    "firebase": "^9.6.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "^5.2.0",

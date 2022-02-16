@@ -6,9 +6,10 @@ import axios from "axios";
 const setAuth = createEvent<boolean>();
 export const setUser = createEvent<any>();
 
-export const $user = createStore<IUser>({ email: "", username: "" });
+export const $user = createStore<IUser>({ id: 0, email: "", username: "" });
 
 $user.on(setUser, (_, payload) => ({
+  id: payload.id,
   email: payload.email,
   username: payload.username,
 }));
