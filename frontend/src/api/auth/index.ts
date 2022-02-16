@@ -1,5 +1,5 @@
 import api from "../axios";
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { AuthResponse } from "types/authResponse";
 
 export interface ILoginParams {
@@ -15,23 +15,17 @@ export interface IRegisterParams {
 
 const AuthService = {
   login: async (params: ILoginParams): Promise<AxiosResponse<AuthResponse>> => {
-    return api.post<AuthResponse>("/login/", params);
+    return api.post<AuthResponse>("/token/", params);
   },
 
   registration: async (
     params: IRegisterParams
   ): Promise<AxiosResponse<AuthResponse>> => {
-    return api.post<AuthResponse>("/registration", params);
+    return axios.post<AuthResponse>("/api/registration/", params);
   },
-  logout: async (
-    email: string,
-    username: string,
-    password: string
-  ): Promise<AxiosResponse<AuthResponse>> => {
-    return api.post<AuthResponse>("/logout", {
-      email,
-      username,
-      password,
+  logout: async (refresh): Promise<AxiosResponse<AuthResponse>> => {
+    return api.post<AuthResponse>("/logout/", {
+      refresh,
     });
   },
 };

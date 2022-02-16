@@ -1,10 +1,10 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
-export const API_URL = "http://127.0.0.1:8000/api/";
+export const API_URL = "api/";
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   const token = JSON.parse(localStorage.getItem("token"));
-  config.headers["Authorization"] = `Bearer ${token?.access_token}`;
+  config.headers["Authorization"] = `Bearer ${token?.access}`;
   config.headers["X-CSRFToken"] = getCookie("csrftoken");
 
   return config;
@@ -19,22 +19,20 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 
 const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
   if (error.response) {
-    // Access Token was expired
-    if (
-      error.response.status === 401 &&
-      error.response.data.message === "jwt expired"
-    ) {
+    if (error.response.status === 403) {
       const storedToken = JSON.parse(localStorage.getItem("token"));
 
       try {
-        const rs = await axios.post(`${API_URL}token/refresh`, {
-          refresh_token: storedToken.refresh_token,
+        const rs = await axios.post(`${API_URL}token/refresh/`, {
+          refresh: storedToken.refresh,
         });
 
-        const { token } = rs.data;
+        const { access } = rs.data;
 
-        localStorage.setItem("token", JSON.stringify(token));
-
+        localStorage.setItem(
+          "token",
+          JSON.stringify({ ...storedToken, access })
+        );
         return;
       } catch (_error) {
         return Promise.reject(_error);

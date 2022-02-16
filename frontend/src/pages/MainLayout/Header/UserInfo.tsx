@@ -2,19 +2,34 @@ import { Avatar, Dropdown, Menu } from "antd";
 import * as React from "react";
 import { UserOutlined } from "@ant-design/icons";
 import IUser from "types/user";
+import { fxLogout } from "../../../models/auth";
+import { useHistory } from "react-router-dom";
 
 interface UserInfoProps {
   currentUser: IUser;
 }
 
 export const UserInfo: React.FC<UserInfoProps> = ({ currentUser }) => {
+  const handleLogoutClick = async ({ key, domEvent }) => {
+    domEvent.preventDefault();
+    if (key === "2") {
+      await fxLogout().then(() => {
+        document.location.reload();
+      });
+    }
+  };
+
   const menu = (
-    <Menu className="user-menu">
-      <span key="0" className="user-menu--info">
-        <span className="user-menu--info--name">{currentUser.username}</span>
-        <span className="user-menu--info--email">{currentUser.email}</span>
-      </span>
-      <Menu.Item key="1" className="user-menu--logout">
+    <Menu className="user-menu" onClick={handleLogoutClick}>
+      <Menu.ItemGroup key="1">
+        <span
+          dangerouslySetInnerHTML={{
+            __html: `<b>${currentUser.username}</b><br/>${currentUser.email}`,
+          }}
+        />
+      </Menu.ItemGroup>
+      <Menu.Divider />
+      <Menu.Item key="2" className="user-menu--logout">
         <span>Вийти</span>
       </Menu.Item>
     </Menu>

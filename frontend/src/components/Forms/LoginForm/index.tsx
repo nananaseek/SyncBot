@@ -5,24 +5,18 @@ import * as React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { submitLoginFrom } from "../model";
 import { useStore } from "effector-react";
-import { $isAuth, fxLogin } from "../../../models/auth";
-import { useEffect } from "react";
+import { fxLogin } from "../../../models/auth";
 import { HOME } from "../../../api/urls";
 
 export const LoginForm = () => {
-  const history = useHistory();
-  const authSuccess = useStore($isAuth);
   const loading = useStore(fxLogin.pending);
 
   const onFinish = (values: any) => {
     submitLoginFrom(values);
+    setTimeout(() => {
+      document.location.replace(HOME);
+    }, 1000);
   };
-
-  useEffect(() => {
-    if (authSuccess) {
-      history.push({ pathname: HOME });
-    }
-  }, [authSuccess]);
 
   return (
     <div className="login-page-container">
@@ -51,16 +45,6 @@ export const LoginForm = () => {
             placeholder="Password"
           />
         </Form.Item>
-        {/* <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
-          <a className="login-form-forgot" href="">
-            Forgot password
-          </a>
-        </Form.Item> */}
-
         <Form.Item>
           <Button
             type="primary"
