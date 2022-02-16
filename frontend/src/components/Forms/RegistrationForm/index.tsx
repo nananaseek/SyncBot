@@ -1,14 +1,19 @@
 import { Button, Form, Input } from "antd";
+import { useStore } from "effector-react";
+import { fxRegister } from "../../../models/auth";
 
 import * as React from "react";
-import { useHistory } from "react-router";
+import { submitRegisterFrom } from "../model";
+import { HOME } from "../../../api/urls";
 
 export const RegistrationForm = () => {
-  const history = useHistory();
+  const loading = useStore(fxRegister.pending);
 
   const onFinish = (values: any) => {
-    console.log("Success:", values);
-    history.push({ pathname: "/" });
+    submitRegisterFrom(values);
+    setTimeout(() => {
+      document.location.replace(HOME);
+    }, 1000);
   };
 
   return (
@@ -16,7 +21,6 @@ export const RegistrationForm = () => {
       <Form
         name="registration"
         className="registration-page-container-form"
-        initialValues={{ remember: true }}
         onFinish={onFinish}
       >
         <Form.Item
@@ -68,6 +72,7 @@ export const RegistrationForm = () => {
             type="primary"
             htmlType="submit"
             className="registration-form-button"
+            loading={loading}
           >
             Register
           </Button>

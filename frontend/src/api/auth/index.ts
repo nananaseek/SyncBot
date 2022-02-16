@@ -1,32 +1,31 @@
 import api from "../axios";
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { AuthResponse } from "types/authResponse";
 
+export interface ILoginParams {
+  username: string;
+  password: string;
+}
+
+export interface IRegisterParams {
+  email: string;
+  username: string;
+  password: string;
+}
+
 const AuthService = {
-  login: async (params): Promise<AxiosResponse<AuthResponse>> => {
-    return api.post<AuthResponse>("/login/", params);
+  login: async (params: ILoginParams): Promise<AxiosResponse<AuthResponse>> => {
+    return api.post<AuthResponse>("/token/", params);
   },
 
   registration: async (
-    email: string,
-    username: string,
-    password: string
+    params: IRegisterParams
   ): Promise<AxiosResponse<AuthResponse>> => {
-    return api.post<AuthResponse>("/registration", {
-      email,
-      username,
-      password,
-    });
+    return axios.post<AuthResponse>("/api/registration/", params);
   },
-  logout: async (
-    email: string,
-    username: string,
-    password: string
-  ): Promise<AxiosResponse<AuthResponse>> => {
-    return api.post<AuthResponse>("/logout", {
-      email,
-      username,
-      password,
+  logout: async (refresh): Promise<AxiosResponse<AuthResponse>> => {
+    return api.post<AuthResponse>("/logout/", {
+      refresh,
     });
   },
 };
