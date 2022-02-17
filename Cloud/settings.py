@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
-import json
+
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-knq^jb2l_djb1g%adsr=(d$asru8esw^h^pe%2&hf&=#+)%aju"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -88,10 +89,9 @@ WSGI_APPLICATION = "Cloud.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DB_CONFIG_FILE = "db_config.json"
+DATABASES = {}
 
-DATABASES = json.load(open(os.path.join(BASE_DIR, DB_CONFIG_FILE)))
-
+DATABASES["default"] = dj_database_url.config(conn_max_age=500, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -177,9 +177,3 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
-
-
-import dj_database_url
-
-prod_db = dj_database_url.config(conn_max_age=500, ssl_require=True)
-DATABASES["default"].update(prod_db)

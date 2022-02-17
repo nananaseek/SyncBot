@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/manage.py",
             "console": "integratedTerminal",
-            "args": ["runserver"],
+            "args": ["runserver","--settings=Cloud.test_settings"],
             "django": true
         }
     ]
