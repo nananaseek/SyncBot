@@ -1,0 +1,1 @@
+web: gunicorn Cloud.wsgi --log-file -
