@@ -5,16 +5,16 @@ from .models import *
 
 class FileSerializer(serializers.ModelSerializer):
     
-    filename = serializers.FileField(max_length=120)
+    file = serializers.FileField(max_length=500)
 
     class Meta:
         model = File
-        fields = ('id', 'name', 'data_create', 'filename')
+        fields = ('id', 'name', 'data_create', 'file')
 
 class FireBaseSerializer(serializers.ModelSerializer):
     
-    filename = serializers.FileField(max_length=120)
+    file_uri = serializers.CharField(max_length=500)
 
     class Meta:
-        model = File
-        fields = ('id', 'name', 'data_create', 'filename')
+        model = Filefirebase
+        fields = ('id', 'name', 'data_create', 'file_uri')
