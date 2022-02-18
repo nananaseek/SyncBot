@@ -11,11 +11,9 @@ const { Dragger } = Upload;
 export const UploadContainer = () => {
   const user = useStore($user);
   const loading = useStore(fxUploadFileToServer.pending);
-  console.log(user);
 
   const handleChange = useCallback(
     async (info) => {
-      console.log(info);
       await fxUploadFile({
         username: user.username,
         fileName: info.fileList[0].name,

@@ -17,11 +17,7 @@ export const $currentUserFiles = createStore([]).on(
   (_, payload) => payload
 );
 
-$currentUserFiles.watch(console.log);
-
 fxUploadFile.use(async (params) => {
-  console.log(params);
-
   const storageRef = ref(storage, `${params.username}/${params.fileName}`);
   uploadBytes(storageRef, params.file)
     .then((response) => {
