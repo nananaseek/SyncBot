@@ -6,7 +6,7 @@ export const Content = ({ children }) => {
     <>
       <Layout.Content className="content-layout">
         <div className="content-layout--main">
-          <main>{children}</main>
+          <main className="content-layout--content">{children}</main>
         </div>
       </Layout.Content>
     </>

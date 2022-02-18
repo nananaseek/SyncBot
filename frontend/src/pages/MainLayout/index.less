@@ -6,6 +6,24 @@
       padding: 20px;
       background-color: #fff;
     }
+    &--content {
+      display: flex;
+      flex-direction: column;
+      & > .page-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 30px;
+      }
+      & .images-group {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: baseline;
+        gap: 20px;
+      }
+    }
   }
   .site-header {
     padding: 0;
