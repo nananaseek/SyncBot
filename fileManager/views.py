@@ -5,9 +5,20 @@ from django.views.generic import ListView
 from django.http import FileResponse, HttpResponse
 from rest_framework import status
 from rest_framework import parsers, renderers
-from rest_framework.generics import RetrieveUpdateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, \
-    RetrieveAPIView, ListAPIView, GenericAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser 
+from rest_framework.generics import (
+    RetrieveUpdateAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    RetrieveAPIView,
+    ListAPIView,
+    GenericAPIView,
+)
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+    IsAdminUser,
+)
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,36 +35,43 @@ from .models import *
 
 
 class FileViewSet(ModelViewSet):
-    queryset = File.objects.all()
-    serializer_class = FileSerializer
+    queryset = Filefirebase.objects.all()
+    serializer_class = FireBaseSerializer
     permission_classes = [IsAuthenticated]
 
+
 class FileDetail(RetrieveUpdateDestroyAPIView):
-    queryset = File.objects.all()
-    parsers_classes = (FormParser, MultiPartParser,)
-    serializer_class = FileSerializer
+    queryset = Filefirebase.objects.all()
+    parsers_classes = (
+        FormParser,
+        MultiPartParser,
+    )
+    serializer_class = FireBaseSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
 
 class FileDownloadListAPIView(ListAPIView):
     queryset = File.objects.all()
-    parser_classes = ( MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = FileSerializer
     permission_classes = [IsAuthenticated]
-    def get(self, request, pk,  format=None):
+
+    def get(self, request, pk, format=None):
         queryset = File.objects.get(id=pk)
         file_handle = queryset.file.path
-        file = open(file_handle, 'rb')
-        filename = queryset.file.name.split('/')[-1]
+        file = open(file_handle, "rb")
+        filename = queryset.file.name.split("/")[-1]
         response = HttpResponse(FileWrapper(file))
-        response['Content-Disposition'] = 'attachment; filename="%s"' % file
+        response["Content-Disposition"] = 'attachment; filename="%s"' % file
         return response
+
 
 class FileUploadView(ModelViewSet):
     queryset = File.objects.all()
-    parser_classes = ( MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = FileSerializer
     permission_classes = [IsAuthenticated]
-    
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
@@ -61,11 +79,12 @@ class FileUploadView(ModelViewSet):
         author_queryset = self.queryset.filter(owner=self.request.user)
         return author_queryset
 
+
 class FileFireBaseUploadView(ModelViewSet):
     queryset = Filefirebase.objects.all()
     serializer_class = FireBaseSerializer
     permission_classes = [IsAuthenticated]
-    
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 

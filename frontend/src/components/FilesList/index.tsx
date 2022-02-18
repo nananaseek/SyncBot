@@ -6,11 +6,19 @@ import { $user } from "../../models/auth";
 import { useStore } from "effector-react";
 
 export const FilesList = () => {
-  const currentUser = useStore($user);
   const files = useStore($currentUserFiles);
+
   useEffect(() => {
-    fxGetFileList({ userId: currentUser.id });
-  }, [JSON.stringify(currentUser)]);
-  console.log(files);
-  return <div></div>;
+    fxGetFileList();
+  }, []);
+
+  return (
+    <Image.PreviewGroup>
+      <div className="images-group">
+        {files.map((file, index) => (
+          <Image key={index} width={300} src={file.file_uri} />
+        ))}
+      </div>
+    </Image.PreviewGroup>
+  );
 };
